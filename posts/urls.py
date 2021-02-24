@@ -9,4 +9,6 @@ urlpatterns=[
     path('post_edit/<int:user_id>/<int:post_id>/',views.edit_post,name='post_edit'),
     path('add_reply/<int:post_id>/<int:comment_id>/',views.add_reply,name='add_reply'),
     path('like/<int:post_id>/',views.post_like, name='post_like'),
+
+
 ]
