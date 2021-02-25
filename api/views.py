@@ -44,3 +44,22 @@ class CommentCreate(generics.ListCreateAPIView,mixins.DestroyModelMixin):
                 serializer.save(user=self.request.user,post=Post.objects.get(pk=self.kwargs['post_id']))
         
 
+    def delete(self,request,*args,**kwargs):
+        if self.get_queryset().exists():
+            self.get_queryset().delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise ValidationError('you never voted for this post loser')
+
+
+class DeletePost(generics.RetrieveDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def delete(self,request,*args,**kwargs):
+        post = Post.objects.filter(pk=kwargs['pk'],user = self.request.user.id)
+        if post.exists():
+            return self.destroy(request,*args,**kwargs)
+        else:
+            raise ValidationError('this isnt your post')
